@@ -13,7 +13,7 @@ class RegisterInto extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
-      body: Center(
+      body: Center(//
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -29,7 +29,7 @@ class RegisterInto extends StatelessWidget {
                       text: MyStrings.welcom, style: textTheme.headline4)),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 32),
+              padding: const EdgeInsets.only(top: 33),
               child: ElevatedButton(
                   style: const ButtonStyle(),
                   onPressed: (() {
