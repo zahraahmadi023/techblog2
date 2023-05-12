@@ -1,25 +1,29 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tecgblog2_prac/Services/dio_services.dart';
 import 'package:tecgblog2_prac/component/myColors.dart';
+import 'package:tecgblog2_prac/component/myString.dart';
+import 'package:tecgblog2_prac/component/my_component.dart';
 import 'package:tecgblog2_prac/view/home_screen.dart';
 import 'package:tecgblog2_prac/view/profole_screen.dart';
-import 'package:tecgblog2_prac/view/register_into.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../component/api_constant.dart';
 
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-  
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
 final GlobalKey<ScaffoldState> _Key=GlobalKey();
-class _MainScreenState extends State<MainScreen> {
-  var selectedIndex = 0;
+class MainScreen extends StatelessWidget{
+  RxInt selectedIndex = 0.obs;
+
+  MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    //DioService().getMethods("https://techblog.sasansafari.com/Techblog/api/home/?command=index");
+    DioService().getMethods(ApiConstants.getHomeItem);
     var size = MediaQuery.of(context).size;
     var textTheme = Theme.of(context).textTheme;
     var marginBody = size.width / 10;
@@ -44,27 +48,28 @@ class _MainScreenState extends State<MainScreen> {
               
               ListTile(
                 title:Text("درباره تک بلاگ  ",style: textTheme.headline4,),
-                onTap: (){},
+                onTap: (){
+                    myLunchUrl(MyStrings.techBlogGithubUrl);
+                },
                 
               ),
               const Divider(color: SolidColors.dividerColor,),
               ListTile(
                 title:Text("اشتراگ گذاری تگ بلاگ  ",style: textTheme.headline4,),
-                onTap: (){},
+                onTap: ()async{
+                await  Share.share(MyStrings.shareText);
+                },
                 
               ),
               const Divider(color: SolidColors.dividerColor,),
               ListTile(
                 title:Text("تگ بلاگ در گیت هاب  ",style: textTheme.headline4,),
-                onTap: (){},
+                onTap: (){
+                  myLunchUrl(MyStrings.techBlogGithubUrl);
+                },
                 
               ),
-              const Divider(color: SolidColors.dividerColor,),
-              
-              
-              
-              
-              
+              const Divider(color: SolidColors.dividerColor,)
             ]
             ),
         ),
@@ -102,8 +107,11 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           Center(
               child: Positioned.fill(
-                child:IndexedStack(
-                  index: selectedIndex,
+                child:
+                
+                Obx(() => 
+                IndexedStack( 
+                  index: selectedIndex.value,
                   children: [
                   HomeScreen(size: size, textTheme: textTheme, marginBody: marginBody),
                   ProfileScreen(size: size, textTheme: textTheme, marginBody: marginBody),
@@ -111,19 +119,26 @@ class _MainScreenState extends State<MainScreen> {
                   ///(size: size, textTheme: textTheme, marginBody: marginBody)
 
                 ],),
+                )
               )),
           BottomNavigation(
               size: size,
               marginBody: marginBody,
               changeScreen: (int value) {
-                setState(() {
-                  selectedIndex=value;
-                });
+              
+                  selectedIndex.value=value;
+              
               }),
         ],
       ),
     );
   }
+  
+  // @override
+  // State<StatefulWidget> createState() {
+  //   // TODO: implement createState
+  //   // throw UnimplementedError();
+  // }
 }
 
 class BottomNavigation extends StatelessWidget {
